@@ -1,0 +1,14 @@
+@media screen and (max-width: 720px) {
+  .hide-mobile {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 720px) {
+  .split-1 {
+    flex: 0.7;
+  }
+  .split-2 {
+    flex: 0.3;
+  }
+}

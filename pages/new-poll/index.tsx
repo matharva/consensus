@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import { v4 as uuid } from "uuid";
 import axios from "axios";
 import { Poll } from "../../types/types";
+import { checkIfAllTrue, isEmptyOption } from "../../helpers";
 
 const newPollItem = {
   id: uuid(),
@@ -20,14 +21,27 @@ const newPollItem = {
 };
 const NewPoll = () => {
   const [pollData, setPollData] = useState(newPollItem);
+  const [createPollError, setCreatePollError] = useState("");
+
   const handleSubmit = () => {
     console.log(pollData);
     const createPoll = async (data: Poll) => {
       const response = await axios.post("http://localhost:5000/data", data);
       console.log("Create poll response: ", response);
     };
-    createPoll(pollData);
+
+    const isQuestionEmpty = pollData.question === "";
+    const isOptionEmpty = !checkIfAllTrue(isEmptyOption(pollData));
+    if (isQuestionEmpty) setCreatePollError("Question cannot be empty");
+
+    if (isOptionEmpty) setCreatePollError("Options for poll cannot be empty");
+
+    if (!isOptionEmpty && !isQuestionEmpty) {
+      setCreatePollError("");
+      createPoll(pollData);
+    }
   };
+
   const handleChange = (item: any, event: any) => {
     const currentIndex = pollData.options.findIndex((x) => x.id === item.id);
 
@@ -84,11 +98,11 @@ const NewPoll = () => {
           placeholder="What is your favourite show?"
         />
 
-        {pollData.options.map((item) => {
+        {pollData.options.map((item, index) => {
           return (
             <>
               <div className="text-gray-500 font-semibold mt-4">
-                Poll Option
+                Poll Option {index + 1}
               </div>
               <input
                 type="text"
@@ -110,6 +124,9 @@ const NewPoll = () => {
 
         <hr className="h-0.5 bg-gray-100 mt-4" />
 
+        <div className="text-red-600 text-center font-bold mt-4">
+          {createPollError}
+        </div>
         <button
           onClick={handleSubmit}
           className="bg-green-500 mx-auto font-bold text-lg p-4 w-full text-white rounded-md mt-4 mb-8"

@@ -1,0 +1,7 @@
+Firebase structure 
+
+-> Poll 
+- id (str)
+- options [{text: "", votes: ""}, {}]
+- pollPublicLink
+- adminLink

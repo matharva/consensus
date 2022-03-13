@@ -1,50 +1,127 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import { BsCheckLg } from "react-icons/bs";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { Option, Poll } from "../../types/types";
+import Link from "next/link";
 
+const Choice = ({ data, setSelectedOption, isSelected }: any) => {
+  const iconStyles = isSelected
+    ? "p-2 bg-green-400"
+    : "border-2 border-gray-100 p-3 bg-gray-100";
+  const boxStyles = isSelected
+    ? " border-2 border-green-400 shadow-green-200"
+    : "";
+
+  return (
+    <div
+      className={`transition-all duration-150 flex items-center justify-start p-4 rounded-md my-6 shadow-lg ${boxStyles}`}
+      style={{ borderWidth: isSelected ? "3px" : "1px" }}
+      onClick={() => setSelectedOption(data.id)}
+      key={data.id}
+    >
+      <div
+        className={`${iconStyles} rounded-full ml-4 flex items-center justify-center `}
+      >
+        {isSelected && <BsCheckLg color="white" className="text-sm" />}
+      </div>
+      <div className="text-xl pl-4">{data.text}</div>
+    </div>
+  );
+};
+
+const newItem = {
+  id: "",
+  question: "",
+  publicLink: "",
+  adminLink: "",
+  options: [
+    {
+      id: "",
+      votes: 0,
+      text: "",
+    },
+    {
+      id: "",
+      votes: 0,
+      text: "",
+    },
+  ],
+};
 const Poll = () => {
+  const router = useRouter();
+  const [pollData, setPollData] = useState<Poll>(newItem);
+  const [question, setQuestion] = useState("");
+  const [options, setOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("");
+  const { id: pollId } = router.query;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // Make a request for a user with a given ID
+      const response = await axios.get(`http://localhost:5000/data/${pollId}`);
+      console.log(response.data);
+      const { options: optionData, question } = response["data"];
+      setQuestion(question);
+      setOptions(optionData);
+      setPollData(response["data"]);
+      console.log("Options: ", options);
+    };
+    if (pollId) fetchData();
+  }, [pollId]);
+
+  useEffect(() => {
+    console.log(selectedOption);
+  }, [selectedOption]);
+
+  const handleSubmit = async () => {
+    const userChoice = pollData.options.filter(
+      (x) => x.id === selectedOption
+    )[0];
+    userChoice.votes += 1;
+    // console.log(userChoice);
+    // const updatedOptionsData = [...pollData.options, userChoice];
+    // const updatedPollData = { ...pollData };
+    // console.log(updatedPollData);
+    const updateVotes = async () => {
+      return axios.put(`http://localhost:5000/data/${pollId}`, pollData);
+    };
+    const res = await updateVotes();
+    console.log(res);
+    router.push(`/poll/result/${pollId}`);
+    // const data = await res;
+    // const response =
+  };
+
   return (
     <div>
       <Navbar />
-      <div className="p-4 max-w-2xl md:mx-auto">
-        <div className="text-3xl font-bold my-8 mb-12">
-          What is your favourite movie?
-        </div>
+      <div className="p-4 max-w-xl md:mx-auto">
+        <div className="text-3xl font-bold my-8 mb-12">{question}</div>
         {/* Options */}
+        {options.map((item: Option) => {
+          return (
+            <Choice
+              data={item}
+              setSelectedOption={setSelectedOption}
+              isSelected={selectedOption === item.id}
+            />
+          );
+        })}
+
         <div
-          className="flex items-center justify-start border-2 p-4 rounded-md border-green-400 my-6 shadow-lg shadow-green-200"
-          style={{ borderWidth: "3px" }}
+          onClick={handleSubmit}
+          className="bg-green-400 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer"
         >
-          <div className="border-2 border-green-400 p-2 rounded-full ml-4 flex items-center justify-center bg-green-400">
-            <BsCheckLg color="white" className="text-sm" />
-          </div>
-          <div className="text-xl pl-4">option1</div>
-        </div>
-        <div
-          className="flex items-center justify-start border-2 p-4 rounded-md border-green-400 my-6 shadow-lg shadow-green-200"
-          style={{ borderWidth: "3px" }}
-        >
-          <div className="border-2 border-green-400 p-2 rounded-full ml-4 flex items-center justify-center bg-green-400">
-            <BsCheckLg color="white" className="text-sm" />
-          </div>
-          <div className="text-xl pl-4">option1</div>
-        </div>
-        <div
-          className="flex items-center justify-start border-2 p-4 rounded-md border-green-400 my-6 shadow-lg shadow-green-200"
-          style={{ borderWidth: "3px" }}
-        >
-          <div className="border-2 border-green-400 p-2 rounded-full ml-4 flex items-center justify-center bg-green-400">
-            <BsCheckLg color="white" className="text-sm" />
-          </div>
-          <div className="text-xl pl-4">option1</div>
-        </div>
-        <div className="bg-green-400 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto">
           Submit your vote
         </div>
-        <div className="bg-gray-300 p-4 w-full text-center rounded font-bold text-white text-xl my-6 max-w-lg md:mx-auto">
-          Jump to result {">"}
-        </div>
+        <Link href={`/poll/result/${pollId}`}>
+          <div className="bg-gray-300 p-4 w-full text-center rounded font-bold text-white text-xl my-6 max-w-lg md:mx-auto cursor-pointer">
+            Jump to result {">"}
+          </div>
+        </Link>
       </div>
 
       <Footer />

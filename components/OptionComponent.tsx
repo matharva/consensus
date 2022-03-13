@@ -3,6 +3,7 @@ import React from "react";
 const OptionComponent = (props: any) => {
   // console.log("Data: ", props);
   const { text, id, votes, total, userChoice, trans } = props;
+  // console.log(text, id, votes, total, userChoice);
 
   let optionPercent;
   if (total === 0) optionPercent = 0;

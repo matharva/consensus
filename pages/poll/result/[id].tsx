@@ -25,6 +25,7 @@ const Results: React.FC = () => {
   let currentDoc;
 
   useEffect(() => {
+    console.log("In use Effect");
     const fetchData = async () => {
       // Make a request for a user with a given ID
       const q = query(collection(db, "polls"), where("id", "==", pollId));
@@ -34,12 +35,13 @@ const Results: React.FC = () => {
         currentPoll = doc.data();
       });
 
+      console.log("CurrentPoll: ", currentPoll);
       const { question, options: optionData }: any = currentPoll;
       setQuestion(question);
-      optionData.sort(function (a: any, b: any) {
-        return b.votes - a.votes;
-      });
-      setOptions(optionData);
+      // optionData.sort(function (a: any, b: any) {
+      //   return b.votes - a.votes;
+      // });
+      // setOptions(optionData);
       setTotalVotes(calculateTotalVotes(optionData));
     };
     if (pollId) {
@@ -50,23 +52,25 @@ const Results: React.FC = () => {
         setUserChoice(userData["userChoice"]["text"]);
       }
     }
-  }, [pollId, options]);
+  }, []);
 
   useEffect(() => {
     currentDoc = collection(db, "polls");
     const unsub = onSnapshot(currentDoc, (snapshot) => {
       snapshot.docs.forEach((doc) => {
-        const currentDoc = doc.data();
-        const optionData = currentDoc.options;
-        optionData.sort(function (a: any, b: any) {
-          return b.votes - a.votes;
-        });
-        setOptions(optionData);
+        const currDoc = doc.data();
+        if (currDoc.id === pollId) {
+          const optionData = currDoc.options;
+          optionData.sort(function (a: any, b: any) {
+            return b.votes - a.votes;
+          });
+          setOptions(optionData);
+        }
       });
     });
 
     return () => unsub();
-  }, [currentDoc]);
+  }, []);
 
   return (
     <div className="md:flex  max-w-4xl mx-auto">
@@ -87,7 +91,7 @@ const Results: React.FC = () => {
                 total={totalVotes}
                 key={item["id"]}
                 userChoice={userChoice}
-                trans={index * 10}
+                // trans={index * 10}
               />
             );
           })}

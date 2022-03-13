@@ -83,7 +83,7 @@ const Poll = () => {
       setQuestion(question);
       setOptions(optionData);
       setPollData(currentPoll);
-      console.log("Options: ", options);
+      // console.log("Options: ", options);
     };
     if (pollId) {
       fetchData();

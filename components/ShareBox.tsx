@@ -79,23 +79,23 @@ const ShareBox = ({ totalVotes, userChoice, pollId }: any) => {
               </div>
               <div className="flex m-1">
                 <Image src={Fb} />
-                <div className="text-blue-400 ml-4 font-bold">
+                <div className="text-blue-800 ml-4 font-bold">
                   Share on Facebook
                 </div>
               </div>
               <div className="flex m-1">
                 <Image src={Wa} />
-                <div className="text-blue-400 ml-4 font-bold">
+                <div className="text-green-400 ml-4 font-bold">
                   Share on Whatsapp
                 </div>
               </div>
               <div className="flex m-1">
                 <Image src={Lk} />
-                <div className="text-blue-400 ml-4 font-bold">Share Link</div>
+                <div className="text-orange-400 ml-4 font-bold">Share Link</div>
               </div>
               <div className="flex m-1">
                 <Image src={Qr} />
-                <div className="text-blue-400 ml-4 font-bold">
+                <div className="text-purple-400 ml-4 font-bold">
                   Share QR Code
                 </div>
               </div>

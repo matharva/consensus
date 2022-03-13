@@ -1,8 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar/Navbar";
+import { v4 as uuid } from "uuid";
+import axios from "axios";
+import { Poll } from "../../types/types";
 
+const newPollItem = {
+  id: uuid(),
+  question: "",
+  publicLink: "",
+  adminLink: "",
+  options: [
+    {
+      id: uuid(),
+      votes: 0,
+      text: "",
+    },
+  ],
+};
 const NewPoll = () => {
+  const [pollData, setPollData] = useState(newPollItem);
+  const handleSubmit = () => {
+    console.log(pollData);
+    const createPoll = async (data: Poll) => {
+      const response = await axios.post("http://localhost:5000/data", data);
+      console.log("Create poll response: ", response);
+    };
+    createPoll(pollData);
+  };
+  const handleChange = (item: any, event: any) => {
+    const currentIndex = pollData.options.findIndex((x) => x.id === item.id);
+
+    if (currentIndex === -1) {
+      console.log("index not in array");
+      return;
+    }
+
+    setPollData((prev) => {
+      return {
+        ...prev,
+        options: [
+          ...prev.options.slice(0, currentIndex),
+          { ...prev.options[currentIndex], text: event.target.value },
+          ...prev.options.slice(currentIndex + 1),
+        ],
+      };
+    });
+  };
+  const addOption = () => {
+    setPollData({
+      ...pollData,
+      options: [
+        ...pollData.options,
+        {
+          id: uuid(),
+          votes: 0,
+          text: "",
+        },
+      ],
+    });
+  };
   return (
     <div>
       <Navbar />
@@ -19,36 +76,44 @@ const NewPoll = () => {
         </div>
         <textarea
           rows={4}
+          value={pollData.question}
+          onChange={(e) =>
+            setPollData({ ...pollData, question: e.target.value })
+          }
           className="shadow-md p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
           placeholder="What is your favourite show?"
         />
 
-        <div className="text-gray-500 font-semibold mt-4">Poll Option</div>
-        <input
-          type="text"
-          placeholder="Option"
-          className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-        />
-        <div className="text-gray-500 font-semibold mt-4">Poll Option</div>
-        <input
-          type="text"
-          placeholder="Option"
-          className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-        />
-        <div className="text-gray-500 font-semibold mt-4 ">Poll Option</div>
-        <input
-          type="text"
-          placeholder="Option"
-          className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-        />
+        {pollData.options.map((item) => {
+          return (
+            <>
+              <div className="text-gray-500 font-semibold mt-4">
+                Poll Option
+              </div>
+              <input
+                type="text"
+                value={item.text}
+                onChange={(e) => handleChange(item, e)}
+                placeholder="Option"
+                className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+              />
+            </>
+          );
+        })}
 
-        <button className="bg-blue-500 mx-auto p-4 w-full text-white rounded-md mt-8">
+        <button
+          onClick={addOption}
+          className="bg-blue-500 mx-auto p-4 w-full text-white rounded-md mt-8"
+        >
           Add another option
         </button>
 
         <hr className="h-0.5 bg-gray-100 mt-4" />
 
-        <button className="bg-green-500 mx-auto font-bold text-lg p-4 w-full text-white rounded-md mt-4 mb-8">
+        <button
+          onClick={handleSubmit}
+          className="bg-green-500 mx-auto font-bold text-lg p-4 w-full text-white rounded-md mt-4 mb-8"
+        >
           Create your Poll
         </button>
       </div>

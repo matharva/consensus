@@ -47,7 +47,7 @@ const LinkPage = () => {
         <hr className="h-0.25 bg-gray-100 my-8" />
         <div className="mt-4">The admin link to manage your poll is: </div>
         <div className="text-sm font-bold text-orange-600 py-2 ">
-          Don't share this link with your participants
+          Do not share this link with your participants
         </div>
         <input
           type="text"

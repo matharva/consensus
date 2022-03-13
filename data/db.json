@@ -7,12 +7,12 @@
         {
           "id": "e267ec9-d1fa-4334-9da4-6293b67dae2e",
           "text": "Spiderman",
-          "votes": 51
+          "votes": 52
         },
         {
           "id": "dec251b7-1ae1-417b-b9c4-5d82aa6f265e",
           "text": "Batman",
-          "votes": 14
+          "votes": 15
         },
         {
           "id": "f156e732-5130-4188-92b9-9a9710ca9b10",
@@ -31,7 +31,7 @@
       "options": [
         {
           "id": "11490456-98a9-4e7c-b698-7326802a7480",
-          "votes": 0,
+          "votes": 1,
           "text": "mfklds;afnlds"
         },
         {

@@ -8,7 +8,7 @@ import Navbar from "../../../components/Navbar";
 
 import ShareBox from "../../../components/ShareBox";
 import OptionComponent from "../../../components/OptionComponent";
-import { calculateTotalVotes } from "../../../helpers";
+import { calculateTotalVotes, getToken } from "../../../helpers";
 
 const Results: React.FC = () => {
   const router = useRouter();
@@ -16,6 +16,7 @@ const Results: React.FC = () => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [totalVotes, setTotalVotes] = useState(0);
+  const [userChoice, setUserChoice] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,7 +28,14 @@ const Results: React.FC = () => {
       setOptions(optionData);
       setTotalVotes(calculateTotalVotes(optionData));
     };
-    if (pollId) fetchData();
+    if (pollId) {
+      fetchData();
+      const userData = getToken(pollId);
+      if (userData) {
+        console.log("User data: ", userData);
+        setUserChoice(userData["userChoice"]["text"]);
+      }
+    }
   }, [pollId]);
 
   return (
@@ -40,13 +48,22 @@ const Results: React.FC = () => {
           {/* Options */}
           {options.map((item) => {
             return (
-              <OptionComponent {...item} total={totalVotes} key={item["id"]} />
+              <OptionComponent
+                {...item}
+                total={totalVotes}
+                key={item["id"]}
+                userChoice={userChoice}
+              />
             );
           })}
 
           <div className="h-24"></div>
         </div>
-        <ShareBox totalVotes={totalVotes} />
+        <ShareBox
+          totalVotes={totalVotes}
+          userChoice={userChoice}
+          pollId={pollId}
+        />
       </div>
       <Footer />
     </div>

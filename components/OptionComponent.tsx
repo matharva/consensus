@@ -2,14 +2,19 @@ import React from "react";
 
 const OptionComponent = (props: any) => {
   // console.log("Data: ", props);
-  const { text, id, votes, total } = props;
+  const { text, id, votes, total, userChoice } = props;
+
   let optionPercent;
   if (total === 0) optionPercent = 0;
   else optionPercent = Math.round((votes / total) * 100);
+
+  const userChoiceStyles =
+    userChoice === text ? "rounded-md border-green-400 shadow-green-200" : "";
+
   return (
     <div
-      className="flex items-center justify-start border-2 p-4 rounded-md border-green-400 my-6 mb-10 shadow-lg shadow-green-200"
-      style={{ borderWidth: "3px" }}
+      className={`flex items-center justify-start p-4 ${userChoiceStyles} my-6 mb-10 shadow-lg `}
+      style={{ borderWidth: userChoice === text ? "3px" : "1px" }}
     >
       <div className="flex items-start justify-start flex-col w-full px-4 relative">
         <div className="text-2xl font-bold">{text}</div>

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { Option, Poll } from "../../types/types";
 import Link from "next/link";
+import { getToken, setToken } from "../../helpers";
 
 const Choice = ({ data, setSelectedOption, isSelected }: any) => {
   const iconStyles = isSelected
@@ -56,6 +57,7 @@ const Poll = () => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
+  const [userChoice, setUserChoice] = useState("");
   const { id: pollId } = router.query;
 
   useEffect(() => {
@@ -69,7 +71,14 @@ const Poll = () => {
       setPollData(response["data"]);
       console.log("Options: ", options);
     };
-    if (pollId) fetchData();
+    if (pollId) {
+      fetchData();
+      const userData = getToken(pollId);
+      if (userData) {
+        console.log("User data: ", userData);
+        setUserChoice(userData["userChoice"]["text"]);
+      }
+    }
   }, [pollId]);
 
   useEffect(() => {
@@ -81,6 +90,11 @@ const Poll = () => {
       (x) => x.id === selectedOption
     )[0];
     userChoice.votes += 1;
+    const data = {
+      pollId: pollId,
+      userChoice: userChoice,
+    };
+    setToken(data);
     // console.log(userChoice);
     // const updatedOptionsData = [...pollData.options, userChoice];
     // const updatedPollData = { ...pollData };
@@ -111,14 +125,21 @@ const Poll = () => {
           );
         })}
 
-        <div
-          onClick={handleSubmit}
-          className="bg-green-400 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer"
-        >
-          Submit your vote
-        </div>
+        {userChoice ? (
+          <div className="bg-green-200 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer">
+            Your vote is submitted
+          </div>
+        ) : (
+          <div
+            onClick={handleSubmit}
+            className="bg-green-400 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer"
+          >
+            Submit your vote
+          </div>
+        )}
+
         <Link href={`/poll/result/${pollId}`}>
-          <div className="bg-gray-300 p-4 w-full text-center rounded font-bold text-white text-xl my-6 max-w-lg md:mx-auto cursor-pointer">
+          <div className="bg-gray-400 p-4 w-full text-center rounded font-bold text-white text-xl my-6 max-w-lg md:mx-auto cursor-pointer">
             Jump to result {">"}
           </div>
         </Link>

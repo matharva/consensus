@@ -10,3 +10,11 @@ export const calculateTotalVotes = (data: Option[]) => {
     return acc + curr.votes;
   }, 0);
 };
+
+export function setToken(data: any) {
+  localStorage.setItem(`${data.pollId}`, JSON.stringify(data));
+}
+export function getToken(data: any) {
+  const userData = localStorage.getItem(data);
+  if (userData) return JSON.parse(userData);
+}

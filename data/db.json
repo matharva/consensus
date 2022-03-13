@@ -81,6 +81,24 @@
           "text": "Eren who?"
         }
       ]
+    },
+    {
+      "id": "4e517521-bde5-4396-a31f-be53d68e7152",
+      "question": "A",
+      "publicLink": "http://localhost:8000/poll/4e517521-bde5-4396-a31f-be53d68e7152",
+      "adminLink": "http://localhost:8000/poll/admin/4e517521-bde5-4396-a31f-be53d68e7152",
+      "options": [
+        {
+          "id": "70e104a4-ae45-4991-a42b-e1ed9c91ff4c",
+          "votes": 1,
+          "text": "bb"
+        },
+        {
+          "id": "bf2dded4-afe6-4199-ac46-1efb5666a9cf",
+          "votes": 0,
+          "text": "cc"
+        }
+      ]
     }
   ]
 }

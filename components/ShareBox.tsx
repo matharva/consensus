@@ -47,13 +47,27 @@ const ShareBox = ({ totalVotes, userChoice, pollId }: any) => {
         )}
       </div>
       <div className="mt-12 hide-mobile split-2">
+        {userChoice ? (
+          <div className="">
+            <div className="text-sm p-4 rounded-md w-full bg-blue-50  my-2">
+              You voted <span className="font-bold ">{userChoice}</span> on this
+              poll
+            </div>
+          </div>
+        ) : (
+          <Link href={`/poll/${pollId}`}>
+            <div className="bg-green-400 p-4 text-center rounded font-bold text-white m-4 mt-0 text-lg md:mx-auto cursor-pointer">
+              Submit your vote
+            </div>
+          </Link>
+        )}
         <div className=" p-6 rounded bg-white shadow-lg">
           <div className="flex flex-col ">
             <div className="text-sm font-bold text-gray-400 ">Total Votes</div>
             <div className="text-4xl font-bold py-4">{totalVotes}</div>
           </div>
 
-          <hr className="h-0.5 bg-gray-100 mt-4" />
+          <hr className="h-0.5 mt-4" />
           <div className="flex flex-col">
             <div className="text-gray-400 font-bold mt-8">Share</div>
             <div className="flex flex-col gap-3">

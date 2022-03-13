@@ -1,0 +1,27 @@
+{
+  "data": [
+    {
+      "id": "7a8cb698-2f1a-4d92-8498-0e41142e30da",
+      "question": "Who is your favourite superhero?",
+      "options": [
+        {
+          "id": "e267ec9-d1fa-4334-9da4-6293b67dae2e",
+          "text": "Spiderman",
+          "votes": 45
+        },
+        {
+          "id": "dec251b7-1ae1-417b-b9c4-5d82aa6f265e",
+          "text": "Batman",
+          "votes": 13
+        },
+        {
+          "id": "f156e732-5130-4188-92b9-9a9710ca9b10",
+          "text": "Superman",
+          "votes": 12
+        }
+      ],
+      "publicLink": "",
+      "adminLink": ""
+    }
+  ]
+}

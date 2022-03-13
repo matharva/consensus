@@ -130,6 +130,7 @@ const Poll = () => {
       {options.map((item: Option) => {
         return (
           <Choice
+            key={item.id}
             data={item}
             setSelectedOption={setSelectedOption}
             isSelected={selectedOption === item.id}

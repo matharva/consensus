@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import Footer from "../../components/Footer/Footer";
-import Navbar from "../../components/Navbar/Navbar";
+import Footer from "../../components/Footer";
+import Navbar from "../../components/Navbar";
 import { v4 as uuid } from "uuid";
 import axios from "axios";
 import { Poll } from "../../types/types";
 import { checkIfAllTrue, isEmptyOption } from "../../helpers";
+import { useRouter } from "next/router";
 
 const newPollItem = {
   id: uuid(),
@@ -17,18 +18,28 @@ const newPollItem = {
       votes: 0,
       text: "",
     },
+    {
+      id: uuid(),
+      votes: 0,
+      text: "",
+    },
   ],
 };
 const NewPoll = () => {
   const [pollData, setPollData] = useState(newPollItem);
   const [createPollError, setCreatePollError] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log(pollData);
     const createPoll = async (data: Poll) => {
-      const response = await axios.post("http://localhost:5000/data", data);
-      console.log("Create poll response: ", response);
+      return axios.post("http://localhost:5000/data", data);
+      // console.log("Create poll response: ", response);
     };
+
+    // Create links
+    pollData.publicLink = `http://localhost:8000/poll/${pollData.id}`;
+    pollData.adminLink = `http://localhost:8000/poll/admin/${pollData.id}`;
 
     const isQuestionEmpty = pollData.question === "";
     const isOptionEmpty = !checkIfAllTrue(isEmptyOption(pollData));
@@ -38,7 +49,9 @@ const NewPoll = () => {
 
     if (!isOptionEmpty && !isQuestionEmpty) {
       setCreatePollError("");
-      createPoll(pollData);
+      const res = await createPoll(pollData);
+      console.log("Create post response: ", res);
+      router.push(`/new-poll/${pollData.id}`);
     }
   };
 
@@ -77,7 +90,7 @@ const NewPoll = () => {
   return (
     <div>
       <Navbar />
-      <div className="m-6 md:max-w-4xl md:m-auto">
+      <div className="m-6 md:max-w-2xl md:m-auto">
         <div className="text-3xl font-bold text-gray-800 mt-8">
           Create a Poll
         </div>

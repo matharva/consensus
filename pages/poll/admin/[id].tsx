@@ -1,6 +1,6 @@
 import React from "react";
-import Footer from "../../../components/Footer/Footer";
-import Navbar from "../../../components/Navbar/Navbar";
+import Footer from "../../../components/Footer";
+import Navbar from "../../../components/Navbar";
 
 import Tw from "../../../assets/icon-colour-icon-profile-twitter.svg";
 import Fb from "../../../assets/icon-colour-icon-profile-facebook.svg";

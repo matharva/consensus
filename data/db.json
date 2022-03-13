@@ -47,25 +47,20 @@
       ]
     },
     {
-      "id": "25b7eb43-0279-43d8-ab17-2e8f69706c8d",
-      "question": "dafafdfa",
-      "publicLink": "",
-      "adminLink": "",
+      "id": "6e2b559e-1701-427d-9291-178bd4e5a47b",
+      "question": "a",
+      "publicLink": "http://localhost:8000/poll/6e2b559e-1701-427d-9291-178bd4e5a47b",
+      "adminLink": "http://localhost:8000/poll/admin/6e2b559e-1701-427d-9291-178bd4e5a47b",
       "options": [
         {
-          "id": "44c75849-980a-4f2b-9fd0-c946445aa9be",
+          "id": "96c6a9dc-b4dd-4f2a-8d13-c1492504c274",
           "votes": 0,
-          "text": "fafda"
+          "text": "f"
         },
         {
-          "id": "2be7cdb7-aabf-4be4-8477-aac5414ccb66",
+          "id": "f4f2cbf2-74ff-4ea3-b130-6037b611e941",
           "votes": 0,
-          "text": "dafda"
-        },
-        {
-          "id": "37b872ac-731c-49d0-a434-d6d1bc9f94b6",
-          "votes": 0,
-          "text": "asfsadfdsa"
+          "text": "v"
         }
       ]
     }

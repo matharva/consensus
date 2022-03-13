@@ -2,7 +2,7 @@ import React from "react";
 
 const OptionComponent = (props: any) => {
   // console.log("Data: ", props);
-  const { text, id, votes, total, userChoice } = props;
+  const { text, id, votes, total, userChoice, trans } = props;
 
   let optionPercent;
   if (total === 0) optionPercent = 0;
@@ -13,8 +13,11 @@ const OptionComponent = (props: any) => {
 
   return (
     <div
-      className={`flex items-center justify-start p-4 ${userChoiceStyles} my-6 mb-10 shadow-lg `}
-      style={{ borderWidth: userChoice === text ? "3px" : "1px" }}
+      className={`transition-all ease-linear duration-1000 w-full flex items-center justify-start p-4 ${userChoiceStyles} my-6 mb-10 shadow-lg `}
+      style={{
+        // transform: `translateY(${trans}rem)`,
+        borderWidth: userChoice === text ? "3px" : "1px",
+      }}
     >
       <div className="flex items-start justify-start flex-col w-full px-4 relative">
         <div className="text-2xl font-bold">{text}</div>

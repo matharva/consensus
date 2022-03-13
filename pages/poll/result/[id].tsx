@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-
+import ReactCSSTransitionGroup from "react-transition-group"; // ES6
 import ShareBox from "../../../components/ShareBox";
 import OptionComponent from "../../../components/OptionComponent";
 import { calculateTotalVotes, getToken } from "../../../helpers";
@@ -53,7 +53,6 @@ const Results: React.FC = () => {
   }, [pollId, options]);
 
   useEffect(() => {
-    let currentData;
     currentDoc = collection(db, "polls");
     const unsub = onSnapshot(currentDoc, (snapshot) => {
       snapshot.docs.forEach((doc) => {
@@ -75,17 +74,25 @@ const Results: React.FC = () => {
         <div className="text-3xl font-bold my-8 mb-10">{question}</div>
 
         {/* Options */}
-        {options.map((item) => {
-          return (
-            <OptionComponent
-              {...item}
-              total={totalVotes}
-              key={item["id"]}
-              userChoice={userChoice}
-            />
-          );
-        })}
-
+        <div className="relative transition-all ease-linear duration-1000">
+          {/* <ReactCSSTransitionGroup
+            transitionName="example"
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}
+          > */}
+          {options.map((item, index) => {
+            return (
+              <OptionComponent
+                {...item}
+                total={totalVotes}
+                key={item["id"]}
+                userChoice={userChoice}
+                trans={index * 10}
+              />
+            );
+          })}
+          {/* </ReactCSSTransitionGroup> */}
+        </div>
         <div className="h-16"></div>
       </div>
       <ShareBox

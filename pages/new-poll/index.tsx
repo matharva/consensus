@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 import { v4 as uuid } from "uuid";
 import axios from "axios";
 import { Poll } from "../../types/types";
 import { checkIfAllTrue, isEmptyOption } from "../../helpers";
 import { useRouter } from "next/router";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
 
 const newPollItem = {
   id: uuid(),
@@ -33,7 +33,13 @@ const NewPoll = () => {
   const handleSubmit = async () => {
     console.log(pollData);
     const createPoll = async (data: Poll) => {
-      return axios.post("http://localhost:5000/data", data);
+      // return axios.post("http://localhost:5000/data", data);
+      try {
+        const docRef = await addDoc(collection(db, "polls"), data);
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
       // console.log("Create poll response: ", response);
     };
 
@@ -89,7 +95,9 @@ const NewPoll = () => {
   };
   return (
     <div className="m-6 md:max-w-2xl md:m-auto">
-      <div className="text-3xl font-bold text-gray-800 mt-8">Create a Poll</div>
+      <div className="text-3xl font-bold text-gray-800 mt-12">
+        Create a Poll
+      </div>
       <div className="font-semibold text-lg  text-gray-600 my-4 line leading-5">
         Complete below fields to create your poll
       </div>
@@ -127,7 +135,7 @@ const NewPoll = () => {
         Add another option
       </button>
 
-      <hr className="h-0.5 bg-gray-100 mt-4" />
+      <hr className="h-0.5  mt-4" />
 
       <div className="text-red-600 text-center font-bold mt-4">
         {createPollError}

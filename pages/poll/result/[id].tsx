@@ -1,14 +1,19 @@
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
-import Footer from "../../../components/Footer";
-import Navbar from "../../../components/Navbar";
-
 import ShareBox from "../../../components/ShareBox";
 import OptionComponent from "../../../components/OptionComponent";
 import { calculateTotalVotes, getToken } from "../../../helpers";
+import {
+  collection,
+  doc,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
 
 const Results: React.FC = () => {
   const router = useRouter();
@@ -17,14 +22,23 @@ const Results: React.FC = () => {
   const [options, setOptions] = useState([]);
   const [totalVotes, setTotalVotes] = useState(0);
   const [userChoice, setUserChoice] = useState("");
+  let currentDoc;
 
   useEffect(() => {
     const fetchData = async () => {
       // Make a request for a user with a given ID
-      const response = await axios.get(`http://localhost:5000/data/${pollId}`);
-      console.log(response.data);
-      const { question, options: optionData } = response["data"];
+      const q = query(collection(db, "polls"), where("id", "==", pollId));
+      const querySnapshot = await getDocs(q);
+      let currentPoll;
+      querySnapshot.forEach((doc) => {
+        currentPoll = doc.data();
+      });
+
+      const { question, options: optionData }: any = currentPoll;
       setQuestion(question);
+      optionData.sort(function (a: any, b: any) {
+        return b.votes - a.votes;
+      });
       setOptions(optionData);
       setTotalVotes(calculateTotalVotes(optionData));
     };
@@ -36,7 +50,24 @@ const Results: React.FC = () => {
         setUserChoice(userData["userChoice"]["text"]);
       }
     }
-  }, [pollId]);
+  }, [pollId, options]);
+
+  useEffect(() => {
+    let currentData;
+    currentDoc = collection(db, "polls");
+    const unsub = onSnapshot(currentDoc, (snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        const currentDoc = doc.data();
+        const optionData = currentDoc.options;
+        optionData.sort(function (a: any, b: any) {
+          return b.votes - a.votes;
+        });
+        setOptions(optionData);
+      });
+    });
+
+    return () => unsub();
+  }, [currentDoc]);
 
   return (
     <div className="md:flex  max-w-4xl mx-auto">

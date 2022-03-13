@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { calculateTotalVotes } from "../../../helpers";
 import OptionComponent from "../../../components/OptionComponent";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
 
 const AdminPage: React.FC = () => {
   const router = useRouter();
@@ -18,9 +20,15 @@ const AdminPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       // Make a request for a user with a given ID
-      const response = await axios.get(`http://localhost:5000/data/${pollId}`);
-      console.log(response.data);
-      const { question, options: optionData } = response["data"];
+      // const response = await axios.get(`http://localhost:5000/data/${pollId}`);
+      // console.log(response.data);
+      const q = query(collection(db, "polls"), where("id", "==", pollId));
+      const querySnapshot = await getDocs(q);
+      let currentPoll;
+      querySnapshot.forEach((doc) => {
+        currentPoll = doc.data();
+      });
+      const { question, options: optionData }: any = currentPoll;
       setQuestion(question);
       setOptions(optionData);
       setTotalVotes(calculateTotalVotes(optionData));

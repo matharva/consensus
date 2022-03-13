@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useClipboard } from "@chakra-ui/react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
 
 const LinkPage = () => {
   const router = useRouter();
@@ -16,9 +18,15 @@ const LinkPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       // Make a request for a user with a given ID
-      const response = await axios.get(`http://localhost:5000/data/${pollId}`);
-      console.log("Data: ", response.data);
-      const { publicLink, adminLink } = response["data"];
+      // const response = await axios.get(`http://localhost:5000/data/${pollId}`);
+      const q = query(collection(db, "polls"), where("id", "==", pollId));
+      const querySnapshot = await getDocs(q);
+      let currentPoll;
+      querySnapshot.forEach((doc) => {
+        currentPoll = doc.data();
+      });
+      // console.log("Data: ", response.data);
+      const { publicLink, adminLink }: any = currentPoll;
       // console.log("Pb, ad: ", publicLink, adminLink);
       setPbLink(publicLink);
       setAdLink(adminLink);

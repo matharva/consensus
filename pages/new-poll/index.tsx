@@ -44,8 +44,8 @@ const NewPoll = () => {
     };
 
     // Create links
-    pollData.publicLink = `http://localhost:8000/poll/${pollData.id}`;
-    pollData.adminLink = `http://localhost:8000/poll/admin/${pollData.id}`;
+    pollData.publicLink = `https://consensus-nine.vercel.app/poll/${pollData.id}`;
+    pollData.adminLink = `https://consensus-nine.vercel.app/poll/admin/${pollData.id}`;
 
     const isQuestionEmpty = pollData.question === "";
     const isOptionEmpty = !checkIfAllTrue(isEmptyOption(pollData));

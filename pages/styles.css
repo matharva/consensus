@@ -12,3 +12,25 @@
     flex: 0.3;
   }
 }
+
+.grid-parent {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: 3rem 1fr 3rem;
+  grid-template-areas:
+    "head"
+    "main-body"
+    "foot";
+}
+
+.head {
+  grid-area: "head";
+}
+
+.main-body {
+  grid-area: "main-body";
+}
+
+.foot {
+  grid-area: "foot";
+}

@@ -39,33 +39,29 @@ const Results: React.FC = () => {
   }, [pollId]);
 
   return (
-    <div className="">
-      <Navbar />
-      <div className="md:flex  max-w-4xl mx-auto">
-        <div className="p-5 max-w-xl md:mx-auto split-1">
-          <div className="text-3xl font-bold my-8 mb-10">{question}</div>
+    <div className="md:flex  max-w-4xl mx-auto">
+      <div className="p-5 max-w-xl md:mx-auto split-1">
+        <div className="text-3xl font-bold my-8 mb-10">{question}</div>
 
-          {/* Options */}
-          {options.map((item) => {
-            return (
-              <OptionComponent
-                {...item}
-                total={totalVotes}
-                key={item["id"]}
-                userChoice={userChoice}
-              />
-            );
-          })}
+        {/* Options */}
+        {options.map((item) => {
+          return (
+            <OptionComponent
+              {...item}
+              total={totalVotes}
+              key={item["id"]}
+              userChoice={userChoice}
+            />
+          );
+        })}
 
-          <div className="h-24"></div>
-        </div>
-        <ShareBox
-          totalVotes={totalVotes}
-          userChoice={userChoice}
-          pollId={pollId}
-        />
+        <div className="h-16"></div>
       </div>
-      <Footer />
+      <ShareBox
+        totalVotes={totalVotes}
+        userChoice={userChoice}
+        pollId={pollId}
+      />
     </div>
   );
 };

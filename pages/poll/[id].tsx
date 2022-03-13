@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 import { BsCheckLg } from "react-icons/bs";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -110,42 +108,37 @@ const Poll = () => {
   };
 
   return (
-    <div>
-      <Navbar />
-      <div className="p-4 max-w-xl md:mx-auto">
-        <div className="text-3xl font-bold my-8 mb-12">{question}</div>
-        {/* Options */}
-        {options.map((item: Option) => {
-          return (
-            <Choice
-              data={item}
-              setSelectedOption={setSelectedOption}
-              isSelected={selectedOption === item.id}
-            />
-          );
-        })}
+    <div className="p-4 max-w-xl md:mx-auto">
+      <div className="text-3xl font-bold my-8 mb-12">{question}</div>
+      {/* Options */}
+      {options.map((item: Option) => {
+        return (
+          <Choice
+            data={item}
+            setSelectedOption={setSelectedOption}
+            isSelected={selectedOption === item.id}
+          />
+        );
+      })}
 
-        {userChoice ? (
-          <div className="bg-green-200 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer">
-            Your vote is submitted
-          </div>
-        ) : (
-          <div
-            onClick={handleSubmit}
-            className="bg-green-400 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer"
-          >
-            Submit your vote
-          </div>
-        )}
+      {userChoice ? (
+        <div className="bg-green-200 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer">
+          Your vote is submitted
+        </div>
+      ) : (
+        <div
+          onClick={handleSubmit}
+          className="bg-green-400 p-4 w-full text-center rounded font-bold text-white text-xl my-4 mt-12 max-w-lg md:mx-auto cursor-pointer"
+        >
+          Submit your vote
+        </div>
+      )}
 
-        <Link href={`/poll/result/${pollId}`}>
-          <div className="bg-gray-400 p-4 w-full text-center rounded font-bold text-white text-xl my-6 max-w-lg md:mx-auto cursor-pointer">
-            Jump to result {">"}
-          </div>
-        </Link>
-      </div>
-
-      <Footer />
+      <Link href={`/poll/result/${pollId}`}>
+        <div className="bg-gray-400 p-4 w-full text-center rounded font-bold text-white text-xl my-6 max-w-lg md:mx-auto cursor-pointer">
+          Jump to result {">"}
+        </div>
+      </Link>
     </div>
   );
 };

@@ -63,6 +63,24 @@
           "text": "v"
         }
       ]
+    },
+    {
+      "id": "948888c9-7bfe-4802-94b3-fd86fe19f4f5",
+      "question": "Is Eren right?",
+      "publicLink": "http://localhost:8000/poll/948888c9-7bfe-4802-94b3-fd86fe19f4f5",
+      "adminLink": "http://localhost:8000/poll/admin/948888c9-7bfe-4802-94b3-fd86fe19f4f5",
+      "options": [
+        {
+          "id": "f525d0c9-fca9-4864-93ec-565526e82b4b",
+          "votes": 1,
+          "text": "yes"
+        },
+        {
+          "id": "ad260fd7-eea3-4b43-bdd9-6d7eee6b07c4",
+          "votes": 1,
+          "text": "Eren who?"
+        }
+      ]
     }
   ]
 }

@@ -19,7 +19,7 @@ const NewPoll = () => {
         </div>
         <textarea
           rows={4}
-          className="shadow-md p-4 w-full"
+          className="shadow-md p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
           placeholder="What is your favourite show?"
         />
 
@@ -27,19 +27,19 @@ const NewPoll = () => {
         <input
           type="text"
           placeholder="Option"
-          className="shadow-md p-4 w-full mt-2"
+          className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
         />
         <div className="text-gray-500 font-semibold mt-4">Poll Option</div>
         <input
           type="text"
           placeholder="Option"
-          className="shadow-md p-4 w-full mt-2"
+          className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
         />
-        <div className="text-gray-500 font-semibold mt-4">Poll Option</div>
+        <div className="text-gray-500 font-semibold mt-4 ">Poll Option</div>
         <input
           type="text"
           placeholder="Option"
-          className="shadow-md p-4 w-full mt-2"
+          className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
         />
 
         <button className="bg-blue-500 mx-auto p-4 w-full text-white rounded-md mt-8">

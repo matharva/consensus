@@ -14,7 +14,13 @@ interface Props {
   userChoice: string;
   pollId: string;
 }
-const ShareBox = ({ totalVotes, userChoice, pollId, onOpen }: any) => {
+const ShareBox = ({
+  totalVotes,
+  userChoice,
+  pollId,
+  onOpen,
+  setShareType,
+}: any) => {
   return (
     <>
       <div className="h-38 fixed bottom-0 w-full bg-white flex flex-col md:hidden">
@@ -27,8 +33,20 @@ const ShareBox = ({ totalVotes, userChoice, pollId, onOpen }: any) => {
             <Image src={Tw} />
             <Image src={Fb} />
             <Image src={Wa} />
-            <Image src={Lk} onClick={onOpen} />
-            <Image src={Qr} />
+            <Image
+              src={Lk}
+              onClick={() => {
+                onOpen();
+                setShareType("link");
+              }}
+            />
+            <Image
+              src={Qr}
+              onClick={() => {
+                onOpen();
+                setShareType("qr");
+              }}
+            />
           </div>
         </div>
         {userChoice ? (
@@ -89,11 +107,23 @@ const ShareBox = ({ totalVotes, userChoice, pollId, onOpen }: any) => {
                   Share on Whatsapp
                 </div>
               </div>
-              <div className="flex m-1 cursor-pointer" onClick={onOpen}>
+              <div
+                className="flex m-1 cursor-pointer"
+                onClick={() => {
+                  onOpen();
+                  setShareType("link");
+                }}
+              >
                 <Image src={Lk} />
                 <div className="text-orange-400 ml-4 font-bold">Share Link</div>
               </div>
-              <div className="flex m-1 cursor-pointer" onClick={onOpen}>
+              <div
+                className="flex m-1 cursor-pointer"
+                onClick={() => {
+                  setShareType("qr");
+                  onOpen();
+                }}
+              >
                 <Image src={Qr} />
                 <div className="text-purple-400 ml-4 font-bold">
                   Share QR Code

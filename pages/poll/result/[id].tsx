@@ -20,6 +20,7 @@ const Results: React.FC = ({ onOpen, isOpen, onClose }: any) => {
   const [totalVotes, setTotalVotes] = useState(0);
   const [userChoice, setUserChoice] = useState("");
   const [pollData, setPollData] = useState<any>(null);
+  const [shareType, setShareType] = useState("");
   let currentDoc;
   let currentDocId;
 
@@ -72,7 +73,12 @@ const Results: React.FC = ({ onOpen, isOpen, onClose }: any) => {
       <div className="p-5 max-w-xl md:mx-auto split-1">
         <div className="text-3xl font-bold my-8 mb-10">{question}</div>
 
-        <ShareModal onClose={onClose} isOpen={isOpen} pollData={pollData} />
+        <ShareModal
+          onClose={onClose}
+          isOpen={isOpen}
+          pollData={pollData}
+          shareType={shareType}
+        />
         {/* Options */}
         <div className="relative transition-all ease-linear duration-1000">
           {options.map((item) => {
@@ -93,6 +99,7 @@ const Results: React.FC = ({ onOpen, isOpen, onClose }: any) => {
         userChoice={userChoice}
         pollId={pollId}
         onOpen={onOpen}
+        setShareType={setShareType}
       />
     </div>
   );

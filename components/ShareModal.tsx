@@ -12,6 +12,8 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { APP_URL } from "../helpers";
+// var QRCode = require("qrcode.react");
+import QRCode from "qrcode.react";
 
 const ShareLinkComp = ({ pollData }: any) => {
   // State
@@ -27,8 +29,8 @@ const ShareLinkComp = ({ pollData }: any) => {
   useEffect(() => {
     const { id } = pollData;
     console.log("id: ", id);
-    setPollLink(`${APP_URL}/poll/${id}`);
-    setResultLink(`${APP_URL}/poll/result/${id}`);
+    setPollLink(`https://consensus-nine.vercel.app/poll/${id}`);
+    setResultLink(`https://consensus-nine.vercel.app/poll/result/${id}`);
   }, [pollData]);
 
   return (
@@ -63,32 +65,24 @@ const ShareLinkComp = ({ pollData }: any) => {
   );
 };
 
-const ShareModal = ({ isOpen, onClose, pollData }: any) => {
-  function renderModalContent() {
-    return (
-      <>
-        <ShareLinkComp pollData={pollData} />
-      </>
-    );
-    // return (
-    //   <>
-    //     <ModalHeader>Modal Title</ModalHeader>
-    //     <ModalCloseButton />
-    //     <ModalBody>
-    //       {/* <Lorem count={2} /> */}
-    //       Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-    //       voluptatum aliquid rerum debitis animi incidunt numquam quasi culpa
-    //       explicabo accusamus.
-    //     </ModalBody>
+const QRComponent = ({ id }: any) => {
+  const resultLink = `https://consensus-nine.vercel.app/poll/result/${id}`;
+  return (
+    <div className="p-4 border-1 rounded-md m-2 md:m-8 border-1 border-gray-100">
+      <div className="text-4xl text-center font-bold pb-8">QR Code</div>
+      <ModalCloseButton />
+      <QRCode className="mx-auto" value={resultLink} />
+      <div className="text-center mt-8">
+        QR Code to the <span className="font-bold">result</span> page
+      </div>
+    </div>
+  );
+};
 
-    //     <ModalFooter>
-    //       <Button colorScheme="blue" mr={3} onClick={onClose}>
-    //         Close
-    //       </Button>
-    //       <Button variant="ghost">Secondary Action</Button>
-    //     </ModalFooter>
-    //   </>
-    // );
+const ShareModal = ({ isOpen, onClose, pollData, shareType }: any) => {
+  function renderModalContent() {
+    if (shareType === "link") return <ShareLinkComp pollData={pollData} />;
+    if (shareType === "qr") return <QRComponent id={pollData.id} />;
   }
 
   return (
@@ -97,7 +91,6 @@ const ShareModal = ({ isOpen, onClose, pollData }: any) => {
       onClose={onClose}
       isCentered
       motionPreset="slideInBottom"
-      //   styleConfig={{ margin: "1rem" }}
     >
       <ModalOverlay />
       <ModalContent style={{ margin: "0 1rem" }}>

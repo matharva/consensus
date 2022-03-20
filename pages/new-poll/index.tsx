@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import axios from "axios";
 import { Poll } from "../../types/types";
@@ -29,6 +29,7 @@ const NewPoll = () => {
   const [pollData, setPollData] = useState(newPollItem);
   const [createPollError, setCreatePollError] = useState("");
   const router = useRouter();
+  const [canShowRemove, setCanShowRemove] = useState(false);
 
   const handleSubmit = async () => {
     console.log(pollData);
@@ -93,6 +94,10 @@ const NewPoll = () => {
       ],
     });
   };
+
+  useEffect(() => {
+    if (pollData.options.length > 2) setCanShowRemove(true);
+  }, [pollData]);
   return (
     <div className="m-6 md:max-w-2xl md:m-auto">
       <div className="text-3xl font-bold text-gray-800 mt-12">
@@ -107,22 +112,29 @@ const NewPoll = () => {
         rows={4}
         value={pollData.question}
         onChange={(e) => setPollData({ ...pollData, question: e.target.value })}
-        className="shadow-md p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+        className="shadow-md p-4 w-full border-2 border-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
         placeholder="What is your favourite show?"
       />
 
       {pollData.options.map((item, index) => {
         return (
           <>
-            <div className="text-gray-500 font-semibold mt-4">
-              Poll Option {index + 1}
+            <div className="flex items-center justify-between mt-4 mx-1">
+              <div className="text-gray-500 font-semibold">
+                Poll Option {index + 1}
+              </div>
+              {canShowRemove && (
+                <div className="text-red-500 font-semibold text-xs cursor-pointer translate-y-2">
+                  Remove
+                </div>
+              )}
             </div>
             <input
               type="text"
               value={item.text}
               onChange={(e) => handleChange(item, e)}
               placeholder="Option"
-              className="shadow-md p-4 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+              className="shadow-md p-4 w-full mt-2 border-2 border-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
             />
           </>
         );

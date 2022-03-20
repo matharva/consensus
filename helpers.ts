@@ -12,6 +12,7 @@ import {
   where,
   doc,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase/firebase";
 // import { collection,  } from "firebase/firestore";
@@ -87,13 +88,17 @@ export async function fetchData(pollId: string | string[]) {
   const q = query(collection(db, "polls"), where("id", "==", pollId));
   const querySnapshot = await getDocs(q);
   let currentPoll;
-  querySnapshot.forEach((doc) => {
+  let docId: any;
+  querySnapshot.forEach((doc: any) => {
+    docId = doc.id;
+    console.log("id: ", doc.id);
     currentPoll = doc.data();
   });
-  return currentPoll;
+  return { currentPoll, docId };
 }
 
-export const updateVotes = async (pollData: any) => {
-  const pollRef = doc(db, "polls", `${pollData}`);
-  setDoc(pollRef, pollData);
+export const updateVotes = async (currentDocId: any, pollData: any) => {
+  const pollRef = doc(db, "polls", `${currentDocId}`);
+
+  return updateDoc(pollRef, pollData);
 };

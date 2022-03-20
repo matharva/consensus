@@ -21,7 +21,7 @@ const LinkPage = () => {
     console.log(pollId);
     async function updateData() {
       if (pollId) {
-        const currentPoll = await fetchData(pollId);
+        const { currentPoll, docId } = await fetchData(pollId);
         console.log(currentPoll);
         const { publicLink, adminLink }: any = currentPoll;
         setPbLink(publicLink);

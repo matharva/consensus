@@ -1,58 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
-import ReactCSSTransitionGroup from "react-transition-group"; // ES6
+import { calculateTotalVotes, fetchData, getToken } from "../../../helpers";
+
+// Components
 import ShareBox from "../../../components/ShareBox";
 import OptionComponent from "../../../components/OptionComponent";
-import { calculateTotalVotes, getToken } from "../../../helpers";
-import {
-  collection,
-  doc,
-  getDocs,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+// Firebase
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
 
 const Results: React.FC = () => {
   const router = useRouter();
   const { id: pollId } = router.query;
+
+  // State
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [totalVotes, setTotalVotes] = useState(0);
   const [userChoice, setUserChoice] = useState("");
   let currentDoc;
+  let currentDocId;
 
   useEffect(() => {
-    console.log("In use Effect");
-    const fetchData = async () => {
-      // Make a request for a user with a given ID
-      const q = query(collection(db, "polls"), where("id", "==", pollId));
-      const querySnapshot = await getDocs(q);
-      let currentPoll;
-      querySnapshot.forEach((doc) => {
-        currentPoll = doc.data();
-      });
-
-      console.log("CurrentPoll: ", currentPoll);
-      const { question, options: optionData }: any = currentPoll;
-      setQuestion(question);
-      // optionData.sort(function (a: any, b: any) {
-      //   return b.votes - a.votes;
-      // });
-      // setOptions(optionData);
-      setTotalVotes(calculateTotalVotes(optionData));
-    };
-    if (pollId) {
-      fetchData();
-      const userData = getToken(pollId);
-      if (userData) {
-        console.log("User data: ", userData);
-        setUserChoice(userData["userChoice"]["text"]);
+    async function updateData() {
+      console.log("Poll Id: ", pollId);
+      if (pollId) {
+        const { currentPoll, docId } = await fetchData(pollId);
+        currentDocId = docId;
+        console.log("currentPoll: ", currentPoll);
+        const { question, options: optionData }: any = currentPoll;
+        optionData.sort(function (a: any, b: any) {
+          return b.votes - a.votes;
+        });
+        setQuestion(question);
+        setOptions(optionData);
+        setTotalVotes(calculateTotalVotes(optionData));
+        const userData = getToken(pollId);
+        if (userData) {
+          console.log("User data: ", userData);
+          setUserChoice(userData["userChoice"]["text"]);
+        }
       }
     }
-  }, []);
+    updateData();
+  }, [pollId]);
 
   useEffect(() => {
     currentDoc = collection(db, "polls");
@@ -60,11 +51,12 @@ const Results: React.FC = () => {
       snapshot.docs.forEach((doc) => {
         const currDoc = doc.data();
         if (currDoc.id === pollId) {
-          const optionData = currDoc.options;
-          optionData.sort(function (a: any, b: any) {
+          const updatedOptionData = currDoc.options;
+          updatedOptionData.sort(function (a: any, b: any) {
             return b.votes - a.votes;
           });
-          setOptions(optionData);
+          setOptions(updatedOptionData);
+          setTotalVotes(calculateTotalVotes(updatedOptionData));
         }
       });
     });
@@ -79,23 +71,16 @@ const Results: React.FC = () => {
 
         {/* Options */}
         <div className="relative transition-all ease-linear duration-1000">
-          {/* <ReactCSSTransitionGroup
-            transitionName="example"
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={300}
-          > */}
-          {options.map((item, index) => {
+          {options.map((item) => {
             return (
               <OptionComponent
                 {...item}
                 total={totalVotes}
                 key={item["id"]}
                 userChoice={userChoice}
-                // trans={index * 10}
               />
             );
           })}
-          {/* </ReactCSSTransitionGroup> */}
         </div>
         <div className="h-16"></div>
       </div>

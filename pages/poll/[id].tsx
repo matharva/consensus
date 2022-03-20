@@ -4,14 +4,7 @@ import { useRouter } from "next/router";
 
 import { BsCheckLg } from "react-icons/bs";
 import { Option, Poll } from "../../types/types";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+
 import {
   createNewPoll,
   fetchData,
@@ -19,7 +12,6 @@ import {
   setToken,
   updateVotes,
 } from "../../helpers";
-import { db } from "../../firebase/firebase";
 
 const Choice = ({ data, setSelectedOption, isSelected }: any) => {
   const iconStyles = isSelected
@@ -56,12 +48,14 @@ const Poll = () => {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const [userChoice, setUserChoice] = useState("");
+  const [currentDocId, setCurrentDocId] = useState("");
 
   // Side Effects
   useEffect(() => {
     async function updateData() {
       if (pollId) {
-        const currentPoll = await fetchData(pollId);
+        const { currentPoll, docId } = await fetchData(pollId);
+        setCurrentDocId(docId);
         const { options: optionData, question }: any = currentPoll;
         setQuestion(question);
         setOptions(optionData);
@@ -83,7 +77,7 @@ const Poll = () => {
     )[0];
     userChoice.votes += 1;
 
-    const res = await updateVotes(pollData);
+    const res = await updateVotes(currentDocId, pollData);
 
     // Update token to remember they have already voted
     const data = {

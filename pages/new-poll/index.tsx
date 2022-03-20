@@ -23,6 +23,7 @@ const NewPoll = () => {
   const [pollData, setPollData] = useState(createNewPoll());
   const [createPollError, setCreatePollError] = useState("");
   const [canShowRemove, setCanShowRemove] = useState(false);
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
 
   // State Handlers
   const handleSubmit = async () => {
@@ -42,12 +43,13 @@ const NewPoll = () => {
     const areAllOptionsDifferent = checkPollOptions(pollData.options);
     console.log(areAllOptionsDifferent);
 
-    // if (!isOptionEmpty && !isQuestionEmpty) {
-    //   setCreatePollError("");
-    //   const res = await createPoll(pollData);
-    //   console.log("Create post response: ", res);
-    //   router.push(`/new-poll/${pollData.id}`);
-    // }
+    if (!isOptionEmpty && !isQuestionEmpty) {
+      setCreatePollError("");
+      setIsSubmitClicked(true);
+      const res = await createPoll(pollData);
+      console.log("Create post response: ", res);
+      router.push(`/new-poll/${pollData.id}`);
+    }
   };
 
   const handleChange = (item: any, event: any) => {
@@ -155,9 +157,12 @@ const NewPoll = () => {
       </div>
       <button
         onClick={handleSubmit}
-        className="bg-green-500 mx-auto font-bold text-lg p-4 w-full text-white rounded-md mt-4 mb-8"
+        disabled={isSubmitClicked}
+        className={`${
+          isSubmitClicked ? "bg-gray-200" : "bg-green-500"
+        } mx-auto font-bold text-lg p-4 w-full text-white rounded-md mt-4 mb-8`}
       >
-        Create your Poll
+        {isSubmitClicked ? "Creating..." : "Create your poll"}
       </button>
     </div>
   );

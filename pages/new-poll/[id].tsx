@@ -38,7 +38,8 @@ const LinkPage = () => {
         <input
           type="text"
           onClick={onCopyPb}
-          value={hasCopiedPb ? "Copied to Clipboard" : pbLink}
+          style={{ caretColor: "transparent" }}
+          defaultValue={hasCopiedPb ? "Copied to Clipboard" : pbLink}
           className="p-2 w-full rounded my-2 bg-gray-100 border-2 text-center cursor-pointer hover:bg-gray-200 outline-none"
         />
         <hr className="h-0.25 bg-gray-100 my-8" />
@@ -53,7 +54,8 @@ const LinkPage = () => {
         <input
           type="text"
           onClick={onCopyAd}
-          value={hasCopiedAd ? "Copied to Clipboard" : adLink}
+          style={{ caretColor: "transparent" }}
+          defaultValue={hasCopiedAd ? "Copied to Clipboard" : adLink}
           className="p-2 w-full rounded my-2 bg-gray-100 border-2 text-center cursor-pointer hover:bg-gray-200 outline-none"
         />
         <div className="flex items-center justify-evenly p-3 text-center ">

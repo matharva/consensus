@@ -1,36 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
-import axios from "axios";
-import { Poll } from "../../types/types";
-import { checkIfAllTrue, isEmptyOption } from "../../helpers";
 import { useRouter } from "next/router";
+
+// External Libraries
+import { v4 as uuid } from "uuid";
+
+// Components
+import { Poll } from "../../types/types";
+
+// Helpers
+import { checkIfAllTrue, createNewPoll, isEmptyOption } from "../../helpers";
+
+// DB
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
-const newPollItem = {
-  id: uuid(),
-  question: "",
-  publicLink: "",
-  adminLink: "",
-  options: [
-    {
-      id: uuid(),
-      votes: 0,
-      text: "",
-    },
-    {
-      id: uuid(),
-      votes: 0,
-      text: "",
-    },
-  ],
-};
 const NewPoll = () => {
-  const [pollData, setPollData] = useState(newPollItem);
-  const [createPollError, setCreatePollError] = useState("");
   const router = useRouter();
+
+  // States
+  const [pollData, setPollData] = useState(createNewPoll());
+  const [createPollError, setCreatePollError] = useState("");
   const [canShowRemove, setCanShowRemove] = useState(false);
 
+  // State Handlers
   const handleSubmit = async () => {
     console.log(pollData);
     const createPoll = async (data: Poll) => {
@@ -51,8 +43,8 @@ const NewPoll = () => {
     const isQuestionEmpty = pollData.question === "";
     const isOptionEmpty = !checkIfAllTrue(isEmptyOption(pollData));
     if (isQuestionEmpty) setCreatePollError("Question cannot be empty");
-
-    if (isOptionEmpty) setCreatePollError("Options for poll cannot be empty");
+    else if (isOptionEmpty)
+      setCreatePollError("Options for poll cannot be empty");
 
     if (!isOptionEmpty && !isQuestionEmpty) {
       setCreatePollError("");
@@ -95,8 +87,17 @@ const NewPoll = () => {
     });
   };
 
+  const handleRemovePollOption = (id: string) => {
+    setPollData({
+      ...pollData,
+      options: [...pollData.options.filter((x) => x.id !== id)],
+    });
+  };
+
   useEffect(() => {
-    if (pollData.options.length > 2) setCanShowRemove(true);
+    if (pollData.options.length > 2) {
+      setCanShowRemove(true);
+    } else setCanShowRemove(false);
   }, [pollData]);
   return (
     <div className="m-6 md:max-w-2xl md:m-auto">
@@ -124,7 +125,10 @@ const NewPoll = () => {
                 Poll Option {index + 1}
               </div>
               {canShowRemove && (
-                <div className="text-red-500 font-semibold text-xs cursor-pointer translate-y-2">
+                <div
+                  className="text-red-500 font-semibold text-xs cursor-pointer translate-y-2"
+                  onClick={(e) => handleRemovePollOption(item.id)}
+                >
                   Remove
                 </div>
               )}

@@ -1,5 +1,8 @@
 import { Option, Poll } from "./types/types";
 
+// External Libraries
+import { v4 as uuid } from "uuid";
+
 export const isEmptyOption = (data: Poll) =>
   data.options.map((item) => item.text !== "");
 
@@ -17,4 +20,25 @@ export function setToken(data: any) {
 export function getToken(data: any) {
   const userData = localStorage.getItem(data);
   if (userData) return JSON.parse(userData);
+}
+
+export function createNewPoll() {
+  return {
+    id: uuid(),
+    question: "",
+    publicLink: "",
+    adminLink: "",
+    options: [
+      {
+        id: uuid(),
+        votes: 0,
+        text: "",
+      },
+      {
+        id: uuid(),
+        votes: 0,
+        text: "",
+      },
+    ],
+  };
 }

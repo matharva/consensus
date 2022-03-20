@@ -4,7 +4,15 @@ import { Option, Poll } from "./types/types";
 import { v4 as uuid } from "uuid";
 
 // DB
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "./firebase/firebase";
 // import { collection,  } from "firebase/firestore";
 // import { db } from "../../firebase/firebase";
@@ -84,3 +92,8 @@ export async function fetchData(pollId: string | string[]) {
   });
   return currentPoll;
 }
+
+export const updateVotes = async (pollData: any) => {
+  const pollRef = doc(db, "polls", `${pollData}`);
+  setDoc(pollRef, pollData);
+};

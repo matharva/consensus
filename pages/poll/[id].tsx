@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { BsCheckLg } from "react-icons/bs";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { Option, Poll } from "../../types/types";
 import Link from "next/link";
+import { useRouter } from "next/router";
+
+import { BsCheckLg } from "react-icons/bs";
+import { Option, Poll } from "../../types/types";
 import {
   collection,
   doc,
@@ -12,7 +12,13 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { getToken, setToken } from "../../helpers";
+import {
+  createNewPoll,
+  fetchData,
+  getToken,
+  setToken,
+  updateVotes,
+} from "../../helpers";
 import { db } from "../../firebase/firebase";
 
 const Choice = ({ data, setSelectedOption, isSelected }: any) => {
@@ -40,78 +46,46 @@ const Choice = ({ data, setSelectedOption, isSelected }: any) => {
   );
 };
 
-const newItem = {
-  id: "",
-  question: "",
-  publicLink: "",
-  adminLink: "",
-  options: [
-    {
-      id: "",
-      votes: 0,
-      text: "",
-    },
-    {
-      id: "",
-      votes: 0,
-      text: "",
-    },
-  ],
-};
 const Poll = () => {
   const router = useRouter();
-  const [pollData, setPollData] = useState<any>(newItem);
+  const { id: pollId } = router.query;
+
+  // State
+  const [pollData, setPollData] = useState<any>(createNewPoll());
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const [userChoice, setUserChoice] = useState("");
-  const { id: pollId } = router.query;
 
+  // Side Effects
   useEffect(() => {
-    const fetchData = async () => {
-      // Make a request for a user with a given ID
-      // const response = await axios.get(`http://localhost:5000/data/${pollId}`);
-      const q = query(collection(db, "polls"), where("id", "==", pollId));
-      const querySnapshot = await getDocs(q);
-      let currentPoll;
-      querySnapshot.forEach((doc) => {
-        currentPoll = doc.data();
-      });
-      console.log("CurrentPoll: ", currentPoll);
-
-      const { options: optionData, question }: any = currentPoll;
-      setQuestion(question);
-      setOptions(optionData);
-      setPollData(currentPoll);
-      // console.log("Options: ", options);
-    };
-    if (pollId) {
-      fetchData();
-      const userData = getToken(pollId);
-      if (userData) {
-        console.log("User data: ", userData);
-        setUserChoice(userData["userChoice"]["text"]);
+    async function updateData() {
+      if (pollId) {
+        const currentPoll = await fetchData(pollId);
+        const { options: optionData, question }: any = currentPoll;
+        setQuestion(question);
+        setOptions(optionData);
+        setPollData(currentPoll);
+        const userData = getToken(pollId);
+        if (userData) {
+          console.log("User data: ", userData);
+          setUserChoice(userData["userChoice"]["text"]);
+        }
       }
     }
+    updateData();
   }, [pollId]);
 
-  useEffect(() => {
-    console.log(selectedOption);
-  }, [selectedOption]);
-
+  // Handlers
   const handleSubmit = async () => {
     const userChoice = pollData.options.filter(
       (x: any) => x.id === selectedOption
     )[0];
     userChoice.votes += 1;
 
-    const updateVotes = async () => {
-      // return axios.put(`http://localhost:5000/data/${pollId}`, pollData);
-      const cityRef = doc(db, "polls", `${pollData}`);
-      setDoc(cityRef, pollData);
-      // console.log("ref: ", cityRef.);
-    };
-    const res = await updateVotes();
+    const res = await updateVotes(pollData);
+
+    // Update token to remember they have already voted
     const data = {
       pollId: pollId,
       userChoice: userChoice,
@@ -119,8 +93,6 @@ const Poll = () => {
     setToken(data);
     console.log(res);
     router.push(`/poll/result/${pollId}`);
-    // const data = await res;
-    // const response =
   };
 
   return (

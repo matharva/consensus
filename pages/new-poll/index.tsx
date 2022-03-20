@@ -8,6 +8,7 @@ import { v4 as uuid } from "uuid";
 import {
   APP_URL,
   checkIfAllTrue,
+  checkPollOptions,
   createNewPoll,
   createPoll,
   isEmptyOption,
@@ -15,6 +16,8 @@ import {
 
 const NewPoll = () => {
   const router = useRouter();
+  // getCurrentURL();
+  // console.log();
 
   // States
   const [pollData, setPollData] = useState(createNewPoll());
@@ -36,12 +39,15 @@ const NewPoll = () => {
     else if (isOptionEmpty)
       setCreatePollError("Options for poll cannot be empty");
 
-    if (!isOptionEmpty && !isQuestionEmpty) {
-      setCreatePollError("");
-      const res = await createPoll(pollData);
-      console.log("Create post response: ", res);
-      router.push(`/new-poll/${pollData.id}`);
-    }
+    const areAllOptionsDifferent = checkPollOptions(pollData.options);
+    console.log(areAllOptionsDifferent);
+
+    // if (!isOptionEmpty && !isQuestionEmpty) {
+    //   setCreatePollError("");
+    //   const res = await createPoll(pollData);
+    //   console.log("Create post response: ", res);
+    //   router.push(`/new-poll/${pollData.id}`);
+    // }
   };
 
   const handleChange = (item: any, event: any) => {
@@ -84,6 +90,7 @@ const NewPoll = () => {
     });
   };
 
+  // Side Effects
   useEffect(() => {
     if (pollData.options.length > 2) {
       setCanShowRemove(true);
@@ -109,7 +116,7 @@ const NewPoll = () => {
 
       {pollData.options.map((item, index) => {
         return (
-          <>
+          <div key={item.id}>
             <div className="flex items-center justify-between mt-4 mx-1">
               <div className="text-gray-500 font-semibold">
                 Poll Option {index + 1}
@@ -130,7 +137,7 @@ const NewPoll = () => {
               placeholder="Option"
               className="shadow-md p-4 w-full mt-2 border-2 border-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
             />
-          </>
+          </div>
         );
       })}
 

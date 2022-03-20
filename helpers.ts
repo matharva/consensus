@@ -7,10 +7,13 @@ import { v4 as uuid } from "uuid";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "./firebase/firebase";
 
-export const APP_URL =
-  location.hostname === "localhost"
-    ? "http://localhost:8000"
-    : "https://consensus-nine.vercel.app";
+export const APP_URL = true
+  ? "http://localhost:8000"
+  : "https://consensus-nine.vercel.app";
+
+// export function getCurrentURL() {
+//   return window.location.href;
+// }
 
 export const isEmptyOption = (data: Poll) =>
   data.options.map((item) => item.text !== "");
@@ -59,4 +62,13 @@ export async function createPoll(data: Poll) {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+}
+
+export function checkPollOptions(options: Option[]) {
+  const data = options.map((x) => x.text);
+
+  const text_set = new Set();
+  data.forEach((x) => text_set.add(x.trim()));
+
+  return text_set.size === options.length;
 }

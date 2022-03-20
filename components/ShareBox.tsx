@@ -14,7 +14,7 @@ interface Props {
   userChoice: string;
   pollId: string;
 }
-const ShareBox = ({ totalVotes, userChoice, pollId }: any) => {
+const ShareBox = ({ totalVotes, userChoice, pollId, onOpen }: any) => {
   return (
     <>
       <div className="h-38 fixed bottom-0 w-full bg-white flex flex-col md:hidden">
@@ -27,7 +27,7 @@ const ShareBox = ({ totalVotes, userChoice, pollId }: any) => {
             <Image src={Tw} />
             <Image src={Fb} />
             <Image src={Wa} />
-            <Image src={Lk} />
+            <Image src={Lk} onClick={onOpen} />
             <Image src={Qr} />
           </div>
         </div>
@@ -71,29 +71,29 @@ const ShareBox = ({ totalVotes, userChoice, pollId }: any) => {
           <div className="flex flex-col">
             <div className="text-gray-400 font-bold mt-8">Share</div>
             <div className="flex flex-col gap-3">
-              <div className="flex m-2">
+              {/* <div className="flex m-2 cursor-pointer" onClick={onOpen}>
                 <Image src={Tw} />
                 <div className="text-blue-400 ml-4 font-bold">
                   Share on Twitter
                 </div>
               </div>
-              <div className="flex m-1">
+              <div className="flex m-1 cursor-pointer" onClick={onOpen}>
                 <Image src={Fb} />
                 <div className="text-blue-800 ml-4 font-bold">
                   Share on Facebook
                 </div>
-              </div>
-              <div className="flex m-1">
+              </div> */}
+              <div className="flex m-1 mt-3 cursor-pointer" onClick={onOpen}>
                 <Image src={Wa} />
                 <div className="text-green-400 ml-4 font-bold">
                   Share on Whatsapp
                 </div>
               </div>
-              <div className="flex m-1">
+              <div className="flex m-1 cursor-pointer" onClick={onOpen}>
                 <Image src={Lk} />
                 <div className="text-orange-400 ml-4 font-bold">Share Link</div>
               </div>
-              <div className="flex m-1">
+              <div className="flex m-1 cursor-pointer" onClick={onOpen}>
                 <Image src={Qr} />
                 <div className="text-purple-400 ml-4 font-bold">
                   Share QR Code

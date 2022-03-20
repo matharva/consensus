@@ -8,8 +8,9 @@ import OptionComponent from "../../../components/OptionComponent";
 // Firebase
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../firebase/firebase";
+import ShareModal from "../../../components/ShareModal";
 
-const Results: React.FC = () => {
+const Results: React.FC = ({ onOpen, isOpen, onClose }: any) => {
   const router = useRouter();
   const { id: pollId } = router.query;
 
@@ -18,6 +19,7 @@ const Results: React.FC = () => {
   const [options, setOptions] = useState([]);
   const [totalVotes, setTotalVotes] = useState(0);
   const [userChoice, setUserChoice] = useState("");
+  const [pollData, setPollData] = useState<any>(null);
   let currentDoc;
   let currentDocId;
 
@@ -26,6 +28,7 @@ const Results: React.FC = () => {
       console.log("Poll Id: ", pollId);
       if (pollId) {
         const { currentPoll, docId } = await fetchData(pollId);
+        setPollData(currentPoll);
         currentDocId = docId;
         console.log("currentPoll: ", currentPoll);
         const { question, options: optionData }: any = currentPoll;
@@ -69,6 +72,7 @@ const Results: React.FC = () => {
       <div className="p-5 max-w-xl md:mx-auto split-1">
         <div className="text-3xl font-bold my-8 mb-10">{question}</div>
 
+        <ShareModal onClose={onClose} isOpen={isOpen} pollData={pollData} />
         {/* Options */}
         <div className="relative transition-all ease-linear duration-1000">
           {options.map((item) => {
@@ -88,6 +92,7 @@ const Results: React.FC = () => {
         totalVotes={totalVotes}
         userChoice={userChoice}
         pollId={pollId}
+        onOpen={onOpen}
       />
     </div>
   );

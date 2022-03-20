@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import "./styles.css";
 import type { AppProps } from "next/app";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { extendTheme } from "@chakra-ui/react";
@@ -24,6 +24,7 @@ const overrides = extendTheme({
 const customTheme = extendTheme(overrides);
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <ChakraProvider theme={customTheme}>
       <Head>
@@ -51,7 +52,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       <div className="grid-parent">
         <Navbar />
         <div className="main-body">
-          <Component {...pageProps} />
+          <Component
+            {...pageProps}
+            onOpen={onOpen}
+            onClose={onClose}
+            isOpen={isOpen}
+          />
         </div>
         <Footer />
       </div>

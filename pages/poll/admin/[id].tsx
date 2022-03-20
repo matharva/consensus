@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { calculateTotalVotes, fetchData, getToken } from "../../../helpers";
 
+// Components
+import ShareBox from "../../../components/ShareBox";
+import OptionComponent from "../../../components/OptionComponent";
+
+// Assets
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
-import ShareBox from "../../../components/ShareBox";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { calculateTotalVotes } from "../../../helpers";
-import OptionComponent from "../../../components/OptionComponent";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../../firebase/firebase";
 
 const AdminPage: React.FC = () => {
   const router = useRouter();
@@ -16,24 +16,31 @@ const AdminPage: React.FC = () => {
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState([]);
   const [totalVotes, setTotalVotes] = useState(0);
+  const [userChoice, setUserChoice] = useState("");
 
+  let currentDocId;
   useEffect(() => {
-    const fetchData = async () => {
-      // Make a request for a user with a given ID
-      // const response = await axios.get(`http://localhost:5000/data/${pollId}`);
-      // console.log(response.data);
-      const q = query(collection(db, "polls"), where("id", "==", pollId));
-      const querySnapshot = await getDocs(q);
-      let currentPoll;
-      querySnapshot.forEach((doc) => {
-        currentPoll = doc.data();
-      });
-      const { question, options: optionData }: any = currentPoll;
-      setQuestion(question);
-      setOptions(optionData);
-      setTotalVotes(calculateTotalVotes(optionData));
-    };
-    if (pollId) fetchData();
+    async function updateData() {
+      console.log("Poll Id: ", pollId);
+      if (pollId) {
+        const { currentPoll, docId } = await fetchData(pollId);
+        currentDocId = docId;
+        console.log("currentPoll: ", currentPoll);
+        const { question, options: optionData }: any = currentPoll;
+        optionData.sort(function (a: any, b: any) {
+          return b.votes - a.votes;
+        });
+        setQuestion(question);
+        setOptions(optionData);
+        setTotalVotes(calculateTotalVotes(optionData));
+        const userData = getToken(pollId);
+        if (userData) {
+          console.log("User data: ", userData);
+          setUserChoice(userData["userChoice"]["text"]);
+        }
+      }
+    }
+    updateData();
   }, [pollId]);
   return (
     <div className="md:flex  max-w-4xl mx-auto">
@@ -57,12 +64,21 @@ const AdminPage: React.FC = () => {
         {/* Options */}
         {options.map((item) => {
           return (
-            <OptionComponent {...item} total={totalVotes} key={item["id"]} />
+            <OptionComponent
+              {...item}
+              total={totalVotes}
+              key={item["id"]}
+              userChoice={userChoice}
+            />
           );
         })}
         <div className="h-16"></div>
       </div>
-      <ShareBox totalVotes={totalVotes} />
+      <ShareBox
+        totalVotes={totalVotes}
+        userChoice={userChoice}
+        pollId={pollId}
+      />
     </div>
   );
 };

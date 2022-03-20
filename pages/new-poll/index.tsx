@@ -4,15 +4,14 @@ import { useRouter } from "next/router";
 // External Libraries
 import { v4 as uuid } from "uuid";
 
-// Components
-import { Poll } from "../../types/types";
-
 // Helpers
-import { checkIfAllTrue, createNewPoll, isEmptyOption } from "../../helpers";
-
-// DB
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebase";
+import {
+  APP_URL,
+  checkIfAllTrue,
+  createNewPoll,
+  createPoll,
+  isEmptyOption,
+} from "../../helpers";
 
 const NewPoll = () => {
   const router = useRouter();
@@ -25,21 +24,12 @@ const NewPoll = () => {
   // State Handlers
   const handleSubmit = async () => {
     console.log(pollData);
-    const createPoll = async (data: Poll) => {
-      // return axios.post("http://localhost:5000/data", data);
-      try {
-        const docRef = await addDoc(collection(db, "polls"), data);
-        console.log("Document written with ID: ", docRef.id);
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
-      // console.log("Create poll response: ", response);
-    };
 
     // Create links
-    pollData.publicLink = `https://consensus-nine.vercel.app/poll/${pollData.id}`;
-    pollData.adminLink = `https://consensus-nine.vercel.app/poll/admin/${pollData.id}`;
+    pollData.publicLink = `${APP_URL}/poll/${pollData.id}`;
+    pollData.adminLink = `${APP_URL}/poll/admin/${pollData.id}`;
 
+    // State Validation
     const isQuestionEmpty = pollData.question === "";
     const isOptionEmpty = !checkIfAllTrue(isEmptyOption(pollData));
     if (isQuestionEmpty) setCreatePollError("Question cannot be empty");

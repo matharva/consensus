@@ -9,6 +9,8 @@ import OptionComponent from "../../../components/OptionComponent";
 // Assets
 import { AiOutlineEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../../firebase/firebase";
 
 const AdminPage: React.FC = () => {
   const router = useRouter();
@@ -17,7 +19,7 @@ const AdminPage: React.FC = () => {
   const [options, setOptions] = useState([]);
   const [totalVotes, setTotalVotes] = useState(0);
   const [userChoice, setUserChoice] = useState("");
-
+  let currentDoc;
   let currentDocId;
   useEffect(() => {
     async function updateData() {
@@ -42,6 +44,25 @@ const AdminPage: React.FC = () => {
     }
     updateData();
   }, [pollId]);
+
+  useEffect(() => {
+    currentDoc = collection(db, "polls");
+    const unsub = onSnapshot(currentDoc, (snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        const currDoc = doc.data();
+        if (currDoc.id === pollId) {
+          const updatedOptionData = currDoc.options;
+          updatedOptionData.sort(function (a: any, b: any) {
+            return b.votes - a.votes;
+          });
+          setOptions(updatedOptionData);
+          setTotalVotes(calculateTotalVotes(updatedOptionData));
+        }
+      });
+    });
+
+    return () => unsub();
+  }, []);
   return (
     <div className="md:flex  max-w-4xl mx-auto">
       <div className="p-5 max-w-xl md:mx-auto split-1">

@@ -4,8 +4,10 @@ import { Option, Poll } from "./types/types";
 import { v4 as uuid } from "uuid";
 
 // DB
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase/firebase";
+// import { collection,  } from "firebase/firestore";
+// import { db } from "../../firebase/firebase";
 
 export const APP_URL = true
   ? "http://localhost:8000"
@@ -71,4 +73,14 @@ export function checkPollOptions(options: Option[]) {
   data.forEach((x) => text_set.add(x.trim()));
 
   return text_set.size === options.length;
+}
+
+export async function fetchData(pollId: string | string[]) {
+  const q = query(collection(db, "polls"), where("id", "==", pollId));
+  const querySnapshot = await getDocs(q);
+  let currentPoll;
+  querySnapshot.forEach((doc) => {
+    currentPoll = doc.data();
+  });
+  return currentPoll;
 }

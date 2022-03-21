@@ -48,6 +48,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           sizes="16x16"
           href="/images/favicon-16x16.png"
         />
+        <link rel="manifest" href="/manifest.json" />
+        <meta charSet="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"
+        />
+        <meta name="description" content="description of your project" />
+        <meta name="theme-color" content="#000" />
       </Head>
       <div className="grid-parent">
         <Navbar />

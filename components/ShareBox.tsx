@@ -31,8 +31,8 @@ const ShareBox = ({
             <div className="text-2xl font-bold">{totalVotes}</div>
           </div>
           <div className="m-4 flex items-baseline justify-evenly gap-6 translate-y-3 -translate-x-3">
-            <Image src={Tw} />
-            <Image src={Fb} />
+            {/* <Image src={Tw} />
+            <Image src={Fb} /> */}
             <Image
               src={Wa}
               onClick={() =>

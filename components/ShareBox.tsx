@@ -8,6 +8,7 @@ import Lk from "../assets/icon-link.svg";
 import Qr from "../assets/icon-qr-code.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { APP_URL } from "../helpers";
 
 interface Props {
   totalVotes: number;
@@ -101,7 +102,16 @@ const ShareBox = ({
                   Share on Facebook
                 </div>
               </div> */}
-              <div className="flex m-1 mt-3 cursor-pointer" onClick={onOpen}>
+              <div
+                className="flex m-1 mt-3 cursor-pointer"
+                onClick={() =>
+                  (window.location.href =
+                    "https://api.whatsapp.com/send?text=Vote for this poll! \n" +
+                    APP_URL +
+                    "/poll/result/" +
+                    pollId)
+                }
+              >
                 <Image src={Wa} />
                 <div className="text-green-400 ml-4 font-bold">
                   Share on Whatsapp

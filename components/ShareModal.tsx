@@ -81,8 +81,8 @@ const QRComponent = ({ id }: any) => {
 
 const ShareModal = ({ isOpen, onClose, pollData, shareType }: any) => {
   function renderModalContent() {
-    if (shareType === "link") return <ShareLinkComp pollData={pollData} />;
     if (shareType === "qr") return <QRComponent id={pollData.id} />;
+    else return <ShareLinkComp pollData={pollData} />;
   }
 
   return (

@@ -18,9 +18,7 @@ import { db } from "./firebase/firebase";
 // import { collection,  } from "firebase/firestore";
 // import { db } from "../../firebase/firebase";
 
-export const APP_URL = true
-  ? "http://localhost:8000"
-  : "https://consensus-nine.vercel.app";
+export const APP_URL = "https://consensus-nine.vercel.app";
 
 // export function getCurrentURL() {
 //   return window.location.href;

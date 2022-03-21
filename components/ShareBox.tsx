@@ -33,7 +33,16 @@ const ShareBox = ({
           <div className="m-4 flex items-baseline justify-evenly gap-6 translate-y-3 -translate-x-3">
             <Image src={Tw} />
             <Image src={Fb} />
-            <Image src={Wa} />
+            <Image
+              src={Wa}
+              onClick={() =>
+                (window.location.href =
+                  "https://api.whatsapp.com/send?text=Vote for this poll! \n" +
+                  APP_URL +
+                  "/poll/result/" +
+                  pollId)
+              }
+            />
             <Image
               src={Lk}
               onClick={() => {

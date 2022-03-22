@@ -10,4 +10,18 @@ export interface Poll {
   options: Option[];
   publicLink: string;
   adminLink: string;
+  pollLink: string;
+  extraOptions: ExtraOptions;
+}
+
+export interface ExtraOptions {
+  enableMultipleVotes: boolean;
+  enableLogin: boolean;
+  enableComments: boolean;
+  enableCaptcha: boolean;
+  enableEndDate: boolean;
+}
+export interface OptionFeatureProps {
+  extraOptions: ExtraOptions;
+  setExtraOptions: React.Dispatch<React.SetStateAction<ExtraOptions>>;
 }

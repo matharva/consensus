@@ -49,6 +49,7 @@ export function createNewPoll() {
     question: "",
     publicLink: "",
     adminLink: "",
+    pollLink: "",
     options: [
       {
         id: uuid(),
@@ -61,6 +62,13 @@ export function createNewPoll() {
         text: "",
       },
     ],
+    extraOptions: {
+      enableMultipleVotes: false,
+      enableLogin: false,
+      enableComments: false,
+      enableCaptcha: false,
+      enableEndDate: false,
+    },
   };
 }
 

@@ -13,17 +13,25 @@ import {
   createPoll,
   isEmptyOption,
 } from "../../helpers";
+import { ExtraOptions } from "../../types/types";
+import OptionFeature from "../../components/OptionFeature";
 
 const NewPoll = () => {
   const router = useRouter();
-  // getCurrentURL();
-  // console.log();
 
   // States
   const [pollData, setPollData] = useState(createNewPoll());
   const [createPollError, setCreatePollError] = useState("");
   const [canShowRemove, setCanShowRemove] = useState(false);
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+
+  const [extraOptions, setExtraOptions] = useState<ExtraOptions>({
+    enableMultipleVotes: false,
+    enableLogin: false,
+    enableComments: false,
+    enableCaptcha: false,
+    enableEndDate: false,
+  });
 
   // State Handlers
   const handleSubmit = async () => {
@@ -32,6 +40,8 @@ const NewPoll = () => {
     // Create links
     pollData.publicLink = `${APP_URL}/poll/${pollData.id}`;
     pollData.adminLink = `${APP_URL}/poll/admin/${pollData.id}`;
+    pollData.pollLink = `${APP_URL}/poll/result/${pollData.id}`;
+    pollData.extraOptions = extraOptions;
 
     // State Validation
     const isQuestionEmpty = pollData.question === "";
@@ -46,9 +56,10 @@ const NewPoll = () => {
     if (!isOptionEmpty && !isQuestionEmpty) {
       setCreatePollError("");
       setIsSubmitClicked(true);
-      const res = await createPoll(pollData);
-      console.log("Create post response: ", res);
-      router.push(`/new-poll/${pollData.id}`);
+      console.log("FinalData: ", pollData);
+      // const res = await createPoll(pollData);
+      // console.log("Create post response: ", res);
+      // router.push(`/new-poll/${pollData.id}`);
     }
   };
 
@@ -106,7 +117,6 @@ const NewPoll = () => {
       <div className="font-semibold text-lg  text-gray-600 my-4 line leading-5">
         Complete below fields to create your poll
       </div>
-
       <div className="text-gray-600 font-semibold mt-8 mb-2">Poll Question</div>
       <textarea
         rows={4}
@@ -115,7 +125,6 @@ const NewPoll = () => {
         className="shadow-md p-4 w-full border-2 border-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
         placeholder="What is your favourite show?"
       />
-
       {pollData.options.map((item, index) => {
         return (
           <div key={item.id}>
@@ -142,16 +151,17 @@ const NewPoll = () => {
           </div>
         );
       })}
-
       <button
         onClick={addOption}
         className="bg-blue-500 mx-auto p-4 w-full text-white rounded-md mt-8"
       >
         Add another option
       </button>
-
       <hr className="h-0.5  mt-4" />
-
+      <OptionFeature
+        extraOptions={extraOptions}
+        setExtraOptions={setExtraOptions}
+      />
       <div className="text-red-600 text-center font-bold mt-4">
         {createPollError}
       </div>

@@ -6,7 +6,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { extendTheme } from "@chakra-ui/react";
 import Head from "next/head";
-import ICON from "../assets/cns.png";
 
 const overrides = extendTheme({
   styles: {
